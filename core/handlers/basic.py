@@ -3,11 +3,19 @@ import json
 from aiogram import Bot
 from aiogram.types import Message
 
+from core.keyboards.reply import reply_keyboard, loc_tel_poll_keyboard, get_reply_keyboard
+
 
 async def get_start(message: Message, bot: Bot):
-    await bot.send_message(message.from_user.id, f'Привет {message.from_user.first_name}. Добро пожаловать!')
-    await message.answer(f'Привет {message.from_user.first_name}. Добро пожаловать!')
-    await message.reply(f'Привет {message.from_user.first_name}. Добро пожаловать!')
+    await message.answer(f'Привет {message.from_user.first_name}. Добро пожаловать!',
+                         reply_markup=get_reply_keyboard())
+
+
+async def get_location(message: Message, bot: Bot):
+    await message.answer(f'Ты отправил локацию'
+                         f'{message.location.latitude}\n'
+                         f'{message.location.longitude}',
+                         reply_markup=loc_tel_poll_keyboard)
 
 
 async def get_photo(message: Message, bot: Bot):

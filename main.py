@@ -6,7 +6,7 @@ from aiogram import types
 from core.filtres.iscontact import IsTrueContact
 from core.handlers.contact import get_true_contact, get_fake_contact
 from core.settings import settings
-from core.handlers.basic import get_start, get_photo, get_hello
+from core.handlers.basic import get_start, get_photo, get_hello, get_location
 from aiogram.filters import Command, CommandStart
 from aiogram import F
 
@@ -38,6 +38,7 @@ async def start():
     dp.message.register(get_start, Command(commands=['start']))
     dp.message.register(get_photo, F.content_type.in_({'photo'}))
     dp.message.register(get_hello, F.text == 'Привет')
+    dp.message.register(get_location, F.location)
     dp.message.register(get_true_contact, IsTrueContact())
     dp.message.register(get_fake_contact)
     try:

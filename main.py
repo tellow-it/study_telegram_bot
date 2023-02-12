@@ -10,11 +10,14 @@ from core.handlers.basic import get_start, get_photo, get_hello
 from aiogram.filters import Command, CommandStart
 from aiogram import F
 
+from core.utils.commands import set_commands
+
 token = settings.bots.bot_token
 admin_id = settings.bots.admin_id
 
 
 async def start_bot(bot: Bot):
+    await set_commands(bot)
     await bot.send_message(admin_id, 'Bot start')
 
 

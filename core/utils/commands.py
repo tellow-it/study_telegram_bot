@@ -15,6 +15,10 @@ async def set_commands(bot: Bot):
         BotCommand(
             command='cancel',
             description='Cancel'
+        ),
+        BotCommand(
+            command='inline',
+            description='Inline keyboard'
         )
     ]
 

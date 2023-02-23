@@ -1,5 +1,58 @@
 from aiogram import Bot
-from aiogram.types import Message, LabeledPrice, PreCheckoutQuery
+from aiogram.types import Message, LabeledPrice, PreCheckoutQuery, InlineKeyboardButton, InlineKeyboardMarkup, \
+    ShippingOption, ShippingQuery
+
+keyboards = InlineKeyboardMarkup(inline_keyboard=[
+    [
+        InlineKeyboardButton(
+            text='Оплатить заказ',
+            pay=True,
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text='Link',
+            url='https://nztcoder.com'
+        )
+    ]
+])
+
+BY_SHIPPING = ShippingOption(
+    id='by',
+    title='Доставка Белпочтой',
+    prices=[
+        LabeledPrice(
+            label='Доставка Белпочтой',
+            amount=500,
+        )
+    ]
+)
+
+RU_SHIPPING = ShippingOption(
+    id='ru',
+    title='Доставка Почтой России',
+    prices=[
+        LabeledPrice(
+            label='Доставка Почтой России',
+            amount=200,
+        )
+    ]
+)
+
+
+async def shipping_check(shipping_query: ShippingQuery, bot: Bot):
+    shipping_options = []
+    countries = ['BY', 'RU']
+    if shipping_query.shipping_address.country_code not in countries:
+        return await bot.answer_shipping_query(shipping_query.id, ok=False,
+                                               error_message='В вашу страну нету доставки')
+    if shipping_query.shipping_address.country_code == 'BY':
+        shipping_options.append(BY_SHIPPING)
+    elif shipping_query.shipping_address.country_code == 'RU':
+        shipping_options.append(RU_SHIPPING)
+
+    await bot.answer_shipping_query(shipping_query.id, ok=True,
+                                    shipping_options=shipping_options)
 
 
 async def order(message: Message, bot: Bot):
@@ -36,18 +89,18 @@ async def order(message: Message, bot: Bot):
         photo_size=100,
         photo_width=800,
         photo_height=450,
-        need_name=True,
-        need_email=True,
-        need_phone_number=True,
-        need_shipping_address=True,
+        need_name=False,
+        need_email=False,
+        need_phone_number=False,
+        need_shipping_address=False,
         send_phone_number_to_provider=False,
         send_email_to_provider=False,
-        is_flexible=False,
+        is_flexible=True,
         disable_notification=False,
         protect_content=False,
         reply_to_message_id=None,
         allow_sending_without_reply=True,
-        reply_markup=None,
+        reply_markup=keyboards,
         request_timeout=15
     )
 
